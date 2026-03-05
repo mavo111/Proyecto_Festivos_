@@ -1,0 +1,104 @@
+package com.itm.festivos.controladores;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.itm.festivos.servicios.FestivoServicio;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.ArrayList;
+
+@RestController
+@RequestMapping("/api/calendario")
+public class CalendarioControlador {
+
+    @Autowired
+    private FestivoServicio festivoServicio;
+
+    
+    @GetMapping("/verificar/{pais}/{anio}/{mes}/{dia}")
+    public String verificar(
+            @PathVariable int pais,
+            @PathVariable int anio,
+            @PathVariable int mes,
+            @PathVariable int dia) {
+
+        boolean esFestivo = festivoServicio.esFestivo(anio, mes, dia);
+
+        if (esFestivo) {
+            return "Es festivo";
+        } else {
+            return "No es festivo";
+        }
+    }
+
+    
+    @GetMapping("/pascua/{anio}")
+    public LocalDate calcularPascua(@PathVariable int anio) {
+        return festivoServicio.calcularPascua(anio);
+    }
+
+    
+    @GetMapping("/festivos/{pais}/{anio}")
+    public List<String> listarFestivos(
+            @PathVariable int pais,
+            @PathVariable int anio) {
+
+        List<String> lista = new ArrayList<>();
+
+        lista.add("Año nuevo - " + anio + "-01-01");
+        lista.add("Día del trabajo - " + anio + "-05-01");
+        lista.add("Independencia Colombia - " + anio + "-07-20");
+        lista.add("Batalla de Boyacá - " + anio + "-08-07");
+        lista.add("Navidad - " + anio + "-12-25");
+
+        return lista;
+    }
+
+    
+    @GetMapping("/generar/{pais}/{anio}")
+    public boolean generarCalendario(
+            @PathVariable int pais,
+            @PathVariable int anio) {
+
+        return true;
+    }
+
+    
+    @GetMapping("/listar/{pais}/{anio}")
+    public List<String> listarCalendario(
+            @PathVariable int pais,
+            @PathVariable int anio) {
+
+        List<String> calendario = new ArrayList<>();
+
+        LocalDate fecha = LocalDate.of(anio, 1, 1);
+        LocalDate fin = LocalDate.of(anio, 12, 31);
+
+        while (!fecha.isAfter(fin)) {
+
+            String tipo;
+
+            
+            if (festivoServicio.esFestivo(anio, fecha.getMonthValue(), fecha.getDayOfMonth())) {
+                tipo = "Festivo";
+            }
+            
+            else if (fecha.getDayOfWeek().toString().equals("SATURDAY") ||
+                     fecha.getDayOfWeek().toString().equals("SUNDAY")) {
+                tipo = "Fin de semana";
+            }
+            
+            else {
+                tipo = "Laboral";
+            }
+
+            calendario.add(fecha + " - " + tipo);
+            fecha = fecha.plusDays(1);
+        }
+
+        return calendario;
+    }
+
+}
