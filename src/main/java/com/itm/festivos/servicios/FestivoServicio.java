@@ -36,11 +36,11 @@ public class FestivoServicio {
         LocalDate fechaConsulta = LocalDate.of(anio, mes, dia);
 
         // Festivos fijos de Colombia
-        if ((mes == 1 && dia == 1) ||      // AÒo nuevo
-            (mes == 5 && dia == 1) ||      // DÌa del trabajo
+        if ((mes == 1 && dia == 1) ||      // A√±o nuevo
+            (mes == 5 && dia == 1) ||      // D√≠a del trabajo
             (mes == 7 && dia == 20) ||     // Independencia Colombia
-            (mes == 8 && dia == 7) ||      // Batalla de Boyac·
-            (mes == 12 && dia == 8) ||     // Inmaculada ConcepciÛn
+            (mes == 8 && dia == 7) ||      // Batalla de Boyac√°
+            (mes == 12 && dia == 8) ||     // Inmaculada Concepci√≥n
             (mes == 12 && dia == 25)) {    // Navidad
             return true;
         }

@@ -1,9 +1,9 @@
 const express = require('express');
-const festivosRoutes = require('./src/routes/festivos.routes');
+const festivosRutas = require('./src/rutas/festivos.rutas');
 
 const app = express();
 
-app.use('/api', festivosRoutes);
+app.use('/api', festivosRutas);
 
 app.get('/', (req, res) => {
     res.send("Microservicio Festivos funcionando");
