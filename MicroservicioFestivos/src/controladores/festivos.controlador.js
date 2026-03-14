@@ -20,3 +20,23 @@ exports.calcularPascua = (req, res) => {
     });
 
 };
+
+exports.obtenerFestivosPorAnio = async (req, res) => {
+
+    try {
+
+        const anio = parseInt(req.params.anio);
+
+        const festivos = await festivosServicio.generarFestivosDelAnio(anio);
+
+        res.json(festivos);
+
+    } catch (error) {
+
+        res.status(500).json({
+            error: "Error obteniendo los festivos"
+        });
+
+    }
+
+};

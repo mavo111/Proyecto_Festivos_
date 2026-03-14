@@ -1,3 +1,5 @@
+const Tipo = require('../modelos/tipo.modelo');
+
 exports.obtenerFestivos = () => {
 
     return [
@@ -24,5 +26,46 @@ exports.calcularPascua = (anio) => {
     domingoPascua.setDate(domingoRamos.getDate() + 7);
 
     return domingoPascua;
+
+};
+
+exports.obtenerTiposFestivos = async () => {
+
+    try {
+
+        const tipos = await Tipo.find();
+
+        return tipos;
+
+    } catch (error) {
+
+        console.error("Error consultando tipos de festivos:", error);
+        throw error;
+
+    }
+
+};
+
+exports.generarFestivosDelAnio = async (anio) => {
+
+    const tipos = await exports.obtenerTiposFestivos();
+
+    let festivos = [];
+
+    tipos.forEach(tipo => {
+
+        tipo.festivos.forEach(f => {
+
+            festivos.push({
+                nombre: f.nombre,
+                dia: f.dia,
+                mes: f.mes
+            });
+
+        });
+
+    });
+
+    return festivos;
 
 };

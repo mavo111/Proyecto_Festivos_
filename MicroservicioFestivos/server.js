@@ -1,7 +1,11 @@
 const express = require('express');
 const festivosRutas = require('./src/rutas/festivos.rutas');
+const conectarBD = require('./src/baseDatos/conexion');
 
 const app = express();
+
+
+conectarBD();
 
 app.use('/api', festivosRutas);
 
