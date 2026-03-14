@@ -35,6 +35,17 @@ public class FestivoServicio {
 
         LocalDate fechaConsulta = LocalDate.of(anio, mes, dia);
 
+        // Festivos fijos de Colombia
+        if ((mes == 1 && dia == 1) ||      // Año nuevo
+            (mes == 5 && dia == 1) ||      // Día del trabajo
+            (mes == 7 && dia == 20) ||     // Independencia Colombia
+            (mes == 8 && dia == 7) ||      // Batalla de Boyacá
+            (mes == 12 && dia == 8) ||     // Inmaculada Concepción
+            (mes == 12 && dia == 25)) {    // Navidad
+            return true;
+        }
+
+        // Buscar festivos almacenados en la base de datos
         List<Festivo> festivos = festivoRepositorio.findAll();
 
         for(Festivo festivo : festivos){
@@ -49,5 +60,4 @@ public class FestivoServicio {
 
         return false;
     }
-
 }

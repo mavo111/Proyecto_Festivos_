@@ -2,7 +2,11 @@ package com.itm.festivos.controladores;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.itm.festivos.servicios.FestivoServicio;
+import com.itm.festivos.repositorios.CalendarioRepositorio;
+import com.itm.festivos.entidades.Calendario;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
@@ -14,6 +18,9 @@ public class CalendarioControlador {
     @Autowired
     private FestivoServicio festivoServicio;
 
+    @Autowired
+    private CalendarioRepositorio calendarioRepositorio;
+
     
     @GetMapping("/verificar/{pais}/{anio}/{mes}/{dia}")
     public String verificar(
@@ -22,18 +29,18 @@ public class CalendarioControlador {
         @PathVariable int mes,
         @PathVariable int dia) {
 
-    try {
-        boolean esFestivo = festivoServicio.esFestivo(anio, mes, dia);
+        try {
+            boolean esFestivo = festivoServicio.esFestivo(anio, mes, dia);
 
-        if (esFestivo) {
-            return "Es festivo";
-        } else {
-            return "No es festivo";
+            if (esFestivo) {
+                return "Es festivo";
+            } else {
+                return "No es festivo";
+            }
+
+        } catch (Exception e) {
+            return "Fecha no válida";
         }
-
-    } catch (Exception e) {
-        return "Fecha no válida";
-    }
     }
 
     
@@ -65,6 +72,33 @@ public class CalendarioControlador {
             @PathVariable int pais,
             @PathVariable int anio) {
 
+        LocalDate fecha = LocalDate.of(anio, 1, 1);
+        LocalDate fin = LocalDate.of(anio, 12, 31);
+
+        while (!fecha.isAfter(fin)) {
+
+            String tipo;
+
+            if (festivoServicio.esFestivo(anio, fecha.getMonthValue(), fecha.getDayOfMonth())) {
+                tipo = "Festivo";
+            }
+            else if (fecha.getDayOfWeek().toString().equals("SATURDAY") ||
+                     fecha.getDayOfWeek().toString().equals("SUNDAY")) {
+                tipo = "Fin de semana";
+            }
+            else {
+                tipo = "Laboral";
+            }
+
+            Calendario calendario = new Calendario();
+            calendario.setFecha(fecha);
+            calendario.setDescripcion(tipo);
+
+            calendarioRepositorio.save(calendario);
+
+            fecha = fecha.plusDays(1);
+        }
+
         return true;
     }
 
@@ -74,36 +108,21 @@ public class CalendarioControlador {
             @PathVariable int pais,
             @PathVariable int anio) {
 
-        List<String> calendario = new ArrayList<>();
+        List<String> lista = new ArrayList<>();
 
-        LocalDate fecha = LocalDate.of(anio, 1, 1);
-        LocalDate fin = LocalDate.of(anio, 12, 31);
+        List<Calendario> registros = calendarioRepositorio.findAll();
 
-        while (!fecha.isAfter(fin)) {
+        for (Calendario c : registros) {
 
-            String tipo;
+            if (c.getFecha().getYear() == anio) {
 
-            
-            if (festivoServicio.esFestivo(anio, fecha.getMonthValue(), fecha.getDayOfMonth())) {
-                tipo = "Festivo";
+                String diaSemana = c.getFecha().getDayOfWeek()
+                        .getDisplayName(java.time.format.TextStyle.FULL, new java.util.Locale("es", "ES"));
+
+                lista.add(c.getFecha() + " - " + diaSemana + " - " + c.getDescripcion());
             }
-            
-            else if (fecha.getDayOfWeek().toString().equals("SATURDAY") ||
-                     fecha.getDayOfWeek().toString().equals("SUNDAY")) {
-                tipo = "Fin de semana";
-            }
-            
-            else {
-                tipo = "Laboral";
-            }
-
-            String diaSemana = fecha.getDayOfWeek()
-            .getDisplayName(java.time.format.TextStyle.FULL, new java.util.Locale("es", "ES"));
-            calendario.add(fecha + " - " + diaSemana + " - " + tipo);
-            fecha = fecha.plusDays(1);
         }
 
-        return calendario;
+        return lista;
     }
-
 }
