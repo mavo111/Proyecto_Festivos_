@@ -1,4 +1,5 @@
 services:
+
   postgres:
     image: postgres:15
     container_name: dockerbdcalendario
@@ -8,3 +9,9 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
+
+  mongodb:
+    image: mongo:6
+    container_name: mongodb_festivos
+    ports:
+      - "27017:27017"
