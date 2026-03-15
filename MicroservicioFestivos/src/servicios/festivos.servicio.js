@@ -58,8 +58,8 @@ exports.generarFestivosDelAnio = async (anio) => {
 
             festivos.push({
                 nombre: f.nombre,
-                dia: f.dia,
-                mes: f.mes
+                dia: parseInt(f.dia),
+                mes: parseInt(f.mes)
             });
 
         });
@@ -67,5 +67,6 @@ exports.generarFestivosDelAnio = async (anio) => {
     });
 
     return festivos;
+
 
 };

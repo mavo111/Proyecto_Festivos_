@@ -4,7 +4,11 @@ const router = express.Router();
 const festivosControlador = require('../controladores/festivos.controlador');
 
 router.get('/festivos', festivosControlador.obtenerFestivos);
+
 router.get('/festivos/obtener/:anio', festivosControlador.obtenerFestivosPorAnio);
+
+router.get('/festivos/verificar/:anio/:mes/:dia', festivosControlador.verificarFestivo);
+
 router.get('/pascua/:anio', festivosControlador.calcularPascua);
 
 module.exports = router;

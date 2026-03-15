@@ -40,3 +40,35 @@ exports.obtenerFestivosPorAnio = async (req, res) => {
     }
 
 };
+
+exports.verificarFestivo = async (req, res) => {
+
+    try {
+
+        const anio = parseInt(req.params.anio);
+        const mes = parseInt(req.params.mes);
+        const dia = parseInt(req.params.dia);
+
+        const festivos = await festivosServicio.generarFestivosDelAnio(anio);
+
+        let esFestivo = false;
+
+        festivos.forEach(f => {
+
+            if (Number(f.dia) === Number(dia) && Number(f.mes) === Number(mes)) {
+                esFestivo = true;
+            }
+
+        });
+
+        res.json(esFestivo);
+
+    } catch (error) {
+
+        res.status(500).json({
+            error: "Error verificando la fecha"
+        });
+
+    }
+
+};

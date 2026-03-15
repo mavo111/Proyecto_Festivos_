@@ -4,6 +4,7 @@ const conectarBD = require('./src/baseDatos/conexion');
 
 const app = express();
 
+app.use(express.json());
 
 conectarBD();
 

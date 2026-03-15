@@ -3,6 +3,7 @@ package com.itm.festivos.controladores;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.itm.festivos.servicios.FestivoCliente;
 import com.itm.festivos.servicios.FestivoServicio;
 import com.itm.festivos.repositorios.CalendarioRepositorio;
 import com.itm.festivos.entidades.Calendario;
@@ -19,6 +20,9 @@ public class CalendarioControlador {
     private FestivoServicio festivoServicio;
 
     @Autowired
+    private FestivoCliente festivoCliente;
+
+    @Autowired
     private CalendarioRepositorio calendarioRepositorio;
 
     
@@ -30,7 +34,8 @@ public class CalendarioControlador {
         @PathVariable int dia) {
 
         try {
-            boolean esFestivo = festivoServicio.esFestivo(anio, mes, dia);
+
+            boolean esFestivo = festivoCliente.esFestivo(anio, mes, dia);
 
             if (esFestivo) {
                 return "Es festivo";
@@ -79,7 +84,7 @@ public class CalendarioControlador {
 
             String tipo;
 
-            if (festivoServicio.esFestivo(anio, fecha.getMonthValue(), fecha.getDayOfMonth())) {
+            if (festivoCliente.esFestivo(anio, fecha.getMonthValue(), fecha.getDayOfMonth())) {
                 tipo = "Festivo";
             }
             else if (fecha.getDayOfWeek().toString().equals("SATURDAY") ||
