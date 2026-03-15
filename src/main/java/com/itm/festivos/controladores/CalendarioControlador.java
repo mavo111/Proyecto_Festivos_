@@ -26,28 +26,30 @@ public class CalendarioControlador {
     private CalendarioRepositorio calendarioRepositorio;
 
     
-    @GetMapping("/verificar/{pais}/{anio}/{mes}/{dia}")
-    public String verificar(
+   @GetMapping("/verificar/{pais}/{anio}/{mes}/{dia}")
+public String verificar(
         @PathVariable int pais,
         @PathVariable int anio,
         @PathVariable int mes,
         @PathVariable int dia) {
 
-        try {
+    try {
 
-            boolean esFestivo = festivoCliente.esFestivo(anio, mes, dia);
+        
+        LocalDate.of(anio, mes, dia);
 
-            if (esFestivo) {
-                return "Es festivo";
-            } else {
-                return "No es festivo";
-            }
+        boolean esFestivo = festivoCliente.esFestivo(anio, mes, dia);
 
-        } catch (Exception e) {
-            return "Fecha no válida";
+        if (esFestivo) {
+            return "Es festivo";
+        } else {
+            return "No es festivo";
         }
-    }
 
+    } catch (Exception e) {
+        return "Fecha no válida";
+    }
+}
     
     @GetMapping("/pascua/{anio}")
     public LocalDate calcularPascua(@PathVariable int anio) {
