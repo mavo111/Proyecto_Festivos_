@@ -15,3 +15,12 @@ services:
     container_name: mongodb_festivos
     ports:
       - "27017:27017"
+
+  api-festivos:
+    build: .
+    container_name: api_festivos
+    depends_on:
+      - postgres
+      - mongodb
+    ports:
+      - "8080:8080"
