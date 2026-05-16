@@ -6,7 +6,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class FestivoCliente {
 
-    private final String API_NODE = "http://localhost:3000/api/festivos/verificar";
+    private final String API_NODE = "http://3.88.127.16:8080/api/festivos/verificar";
 
     public boolean esFestivo(int anio, int mes, int dia){
 
